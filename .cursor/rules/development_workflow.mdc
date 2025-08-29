@@ -1,0 +1,78 @@
+---
+description: Development Workflow.
+globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
+---
+
+# Development Workflow
+
+## Package Management
+
+- Use Bun as the primary runtime and package manager
+- Run `bun install` for dependency management
+- Use `bun dev` for development server
+- Use `bun build` for production builds
+- Use `bun test` for running tests
+
+## Development Commands
+
+- `bun dev` - Start development server
+- `bun build` - Build for production
+- `bun start` - Start production server
+- `bun test` - Run test suite
+- `bun run <script>` - Execute package scripts
+
+## Convex Development
+
+- Use `npx convex dev` for Convex development
+- Deploy changes with `npx convex deploy`
+- Test functions locally before deployment
+- Use the Convex dashboard for debugging
+
+## Testing Strategy
+
+- Write tests for all Convex functions
+- Test React components with React Testing Library
+- Use Bun's built-in test runner
+- Mock external dependencies appropriately
+- Test both success and error cases
+
+## Code Quality
+
+- Use Prettier for code formatting
+- Follow ESLint rules for code quality
+- Use TypeScript strict mode
+- Implement proper error handling
+- Write self-documenting code
+
+## Git Workflow
+
+- Use descriptive commit messages
+- Create feature branches for new features
+- Review code before merging
+- Keep commits focused and atomic
+- Use conventional commit format
+
+## Environment Management
+
+- Use `.env.local` for local development
+- Never commit sensitive environment variables
+- Use Convex environment variables for configuration
+- Document required environment variables
+
+## Performance Considerations
+
+- Optimize bundle size with proper imports
+- Use React.memo for expensive components
+- Implement proper loading states
+- Leverage Next.js optimizations
+- Monitor Convex function performance
+
+## Deployment
+
+- Deploy to Vercel for Next.js frontend
+- Deploy Convex functions to production
+- Set up proper environment variables
+- Monitor application performance
+- Implement proper error tracking
+
+

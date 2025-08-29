@@ -1,0 +1,62 @@
+---
+description: Next.js Guidelines.
+globs: "*.ts, *.tsx,  *.js, *.jsx, package.json"
+---
+
+# Next.js Guidelines
+
+## Project Structure
+
+- Use the App Router (`app/` directory) for all routing
+- Place reusable components in `components/` directory
+- Store utility functions in `lib/` directory
+- Keep hooks in `hooks/` directory
+- Use TypeScript for all files
+
+## Component Guidelines
+
+- Export components as default exports
+- Use functional components with hooks
+- Follow the structure: exported component, subcomponents, helpers, static content, types
+- Minimize comments in code
+- Use proper TypeScript types for props and state
+
+## Styling
+
+- Use Tailwind CSS classes for styling
+- Import global styles from `app/globals.css`
+- Use CSS modules or styled-components sparingly
+- Follow the design system defined in `components/ui/`
+
+## State Management
+
+- Use React hooks for local state
+- Use Convex for server state and real-time data
+- Wrap the app with `ConvexClientProvider` for Convex integration
+- Use Clerk for authentication
+
+## Performance
+
+- Use Next.js Image component for optimized images
+- Implement proper loading states
+- Use React.memo for expensive components when needed
+- Leverage Next.js built-in optimizations
+
+## File Naming
+
+- Use kebab-case for file names
+- Use PascalCase for component names
+- Use camelCase for function and variable names
+- Group related components in subdirectories
+
+## Import/Export
+
+- Use named imports for utilities and types
+- Use default exports for components
+- Group imports: React, external libraries, internal components, types
+- Use absolute imports from the root when possible
+  description:
+  globs:
+  alwaysApply: true
+
+---

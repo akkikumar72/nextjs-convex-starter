@@ -1,0 +1,66 @@
+---
+description: TypeScript Guidelines
+globs: "*.ts, *.tsx"
+---
+# TypeScript Guidelines
+
+## Type Safety
+
+- Always use strict TypeScript configuration
+- Prefer explicit types over type inference when clarity is needed
+- Use proper generic types for reusable components and functions
+- Avoid `any` type - use `unknown` or proper typing instead
+
+## Type Definitions
+
+- Define interfaces for component props
+- Use type aliases for complex union types
+- Leverage utility types like `Partial<T>`, `Pick<T>`, `Omit<T>`
+- Use discriminated unions for state management
+
+## Convex Types
+
+- Import `Id<T>` from `./_generated/dataModel` for document IDs
+- Use proper table names in ID types: `Id<'users'>`, `Id<'messages'>`
+- Leverage generated types from Convex for database operations
+- Use `Doc<T>` type for document objects
+
+## Component Props
+
+- Define prop interfaces with descriptive names
+- Make optional props explicit with `?`
+- Use union types for variant props
+- Provide default values when appropriate
+
+## Function Types
+
+- Use proper return types for all functions
+- Leverage function overloads for complex APIs
+- Use generic constraints for type-safe operations
+- Annotate async function return types
+
+## Error Handling
+
+- Use proper error types and interfaces
+- Leverage TypeScript's built-in error handling
+- Use discriminated unions for error states
+- Provide meaningful error messages
+
+## Import/Export Types
+
+- Export types and interfaces when they're used across files
+- Use barrel exports for related types
+- Import types separately from runtime code when possible
+- Use namespace imports for large type libraries
+
+## Code Organization
+
+- Group related types together
+- Use consistent naming conventions
+- Place types near their usage when they're file-specific
+- Create shared type files for common interfaces
+  description:
+  globs:
+  alwaysApply: true
+
+---

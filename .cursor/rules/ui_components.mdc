@@ -1,0 +1,62 @@
+---
+description: UI Component Guidelines
+globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
+---
+
+# UI Component Guidelines
+
+## Component Library Usage
+
+- Use components from `components/ui/` as the primary UI building blocks
+- Leverage shadcn/ui components for consistent design
+- Use `components/magicui/` for advanced animations and effects
+- Use `components/kokonutui/` for specialized interactive elements
+
+## Design System
+
+- Follow the established color scheme and spacing system
+- Use consistent border radius, shadows, and typography
+- Leverage CSS variables for theme-aware styling
+- Maintain visual hierarchy through proper spacing and sizing
+
+## Component Composition
+
+- Build complex UIs by composing simple components
+- Use compound component patterns when appropriate
+- Leverage render props for flexible component APIs
+- Keep components focused on single responsibilities
+
+## Animation and Motion
+
+- Use Framer Motion for complex animations
+- Leverage `components/motion-primitives/` for common patterns
+- Implement progressive enhancement for animations
+- Ensure animations respect user preferences (reduced motion)
+
+## Responsive Design
+
+- Use Tailwind's responsive prefixes consistently
+- Design mobile-first when possible
+- Test components across different screen sizes
+- Use proper breakpoints for layout changes
+
+## Accessibility
+
+- Include proper ARIA labels and roles
+- Ensure keyboard navigation works correctly
+- Use semantic HTML elements
+- Test with screen readers and keyboard-only navigation
+
+## Custom Components
+
+- Extend existing UI components rather than rebuilding
+- Use consistent prop interfaces across similar components
+- Implement proper TypeScript types for all props
+- Follow the established naming conventions
+
+## Theme Integration
+
+- Use the theme provider for dark/light mode support
+- Leverage CSS custom properties for theme values
+- Ensure components work in both themes
+- Use the mode toggle component for theme switching
