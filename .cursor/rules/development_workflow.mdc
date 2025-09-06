@@ -5,6 +5,13 @@ globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
 
 # Development Workflow
 
+🚨 IMPORTANT:
+Always read convex-aihost.md before writing any code.
+After major features, update convex-aihost.md.
+Document the entire database schema here.
+Add new migrations to the same file.
+
+
 ## Package Management
 
 - Use Bun as the primary runtime and package manager
@@ -12,6 +19,7 @@ globs: "*.ts, *.tsx, *.html, *.css, *.js, *.jsx, package.json"
 - Use `bun dev` for development server
 - Use `bun build` for production builds
 - Use `bun test` for running tests
+- Use `bun tsc` for running type checking in watch mode
 
 ## Development Commands
 
