@@ -24,11 +24,17 @@ to fetch web data for AI agents, summarization, lead enrichment, and knowledge m
 - **Payment Integration**: Clerk pricing table integration
 - **Theme System**: Dark/light mode with next-themes
 
-### 🔄 Currently Missing (Core Handinger Features)
+### ✅ Recently Implemented (Major Update)
 
-- **Web Extraction Engine**: Playwright-based scraping system
+- **🚀 Hybrid Web Extraction Engine**: Intelligent Playwright + Jina AI fallback system
+- **🧠 Smart Strategy Selection**: Automatically chooses optimal extraction method per URL
+- **🔄 Robust Fallback System**: Jina AI handles complex sites when Playwright fails
+- **📊 Enhanced Credit System**: Dynamic complexity detection with detailed extraction metadata
+- **🛠️ Production-Ready API**: Comprehensive error handling and diagnostics
+
+### 🔄 Still Missing (Core Handinger Features)
+
 - **AI Processing**: OpenAI integration for content analysis
-- **Extraction API**: RESTful endpoints for all extraction types
 - **Handinger UI**: Tabbed interface matching Handinger's design
 - **Rate Limiting**: Global and per-domain restrictions
 - **Caching System**: Content caching for cost optimization
@@ -54,15 +60,88 @@ User Interface (Next.js + shadcn/ui)
     ↓
 Extraction API (Next.js API Routes)
     ↓
-Convex Functions (Rate limiting, Credit check)
-    ↓
-Playwright Engine (Web scraping + Screenshots)
+Hybrid Extraction Engine (Smart routing)
+    ↓ Primary Method    ↓ Fallback Method
+Playwright Engine ←→ Jina AI Reader
+(Fast, screenshots)   (Complex sites, JS-heavy)
     ↓
 OpenAI Processing (AI prompts + Content analysis)
     ↓
 Convex Database (Results + Caching)
     ↓
-Response (JSON with extracted content)
+Response (JSON with extracted content + extraction metadata)
+```
+
+## 🚀 Hybrid Extraction Engine (Latest Implementation)
+
+### Intelligent Method Selection
+
+The hybrid engine uses a simplified, high-coverage strategy:
+
+**Playwright Primary (Fast & Static)**
+
+- Only for known static sites (Wikipedia, StackOverflow, .edu/.gov/.org domains)
+- Speed-optimized for simple, reliable content extraction
+- Always has Jina AI fallback
+
+**Jina AI Primary (Comprehensive Coverage)**
+
+- Default for everything else (better success rates)
+- Handles all complex sites: docs, social media, SPAs, dynamic content
+- Robust against bot detection and JavaScript-heavy sites
+- Fallback to Playwright when needed
+
+**Smart Fallback System**
+
+- Playwright → Jina AI fallback for static sites
+- Jina AI → Playwright fallback for most sites
+- Social media → Jina AI only (no fallback needed)
+- Quality validation ensures good results
+
+### Extraction Strategy Examples
+
+```typescript
+// Static sites → Playwright primary, Jina fallback
+wikipedia.org → {
+  primary: 'playwright',
+  fallback: 'jina',
+  reasoning: 'Static content site, Playwright should handle efficiently'
+}
+
+// Social media → Jina only (no fallback)
+twitter.com/vercel → {
+  primary: 'jina',
+  fallback: undefined,
+  reasoning: 'Social media platform with heavy bot detection, requires Jina'
+}
+
+// Everything else → Jina primary, Playwright fallback (default)
+docs.convex.dev → {
+  primary: 'jina',
+  fallback: 'playwright',
+  reasoning: 'Default to robust Jina extraction for comprehensive coverage'
+}
+```
+
+### Enhanced API Response
+
+New extraction details in API response:
+
+```json
+{
+  "success": true,
+  "result": { "content": "...", "metadata": {...} },
+  "extractionDetails": {
+    "method": "jina",           // Which method succeeded
+    "primaryAttempts": 1,       // How many attempts
+    "fallbackUsed": false,      // Whether fallback was needed
+    "strategy": "Dynamic content platform, Jina handles JS better"
+  },
+  "credits": {
+    "complexity": "advanced",   // Smart complexity detection
+    "cost": 4
+  }
+}
 ```
 
 ## Core Features to Implement (Based on Handinger)
