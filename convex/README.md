@@ -1,90 +1,94 @@
-# Welcome to your Convex functions directory!
+# Convex Extraction System
 
-Write your Convex functions here.
-See https://docs.convex.dev/functions for more.
+## Migration Summary
 
-A query function that takes two arguments looks like:
+The extraction system has been successfully migrated from the `@extractor/` library to use Convex
+actions with caching. This provides better performance, reliability, and caching capabilities.
 
-```ts
-// convex/myFunctions.ts
-import { query } from "./_generated/server";
-import { v } from "convex/values";
+## Architecture
 
-export const myQueryFunction = query({
-  // Validators for arguments.
-  args: {
-    first: v.number(),
-    second: v.string(),
-  },
+### Core Components
 
-  // Function implementation.
-  handler: async (ctx, args) => {
-    // Read the database as many times as you need here.
-    // See https://docs.convex.dev/database/reading-data.
-    const documents = await ctx.db.query("tablename").collect();
+1. **`fetcherLLM.ts`** - Enhanced internal action that handles Jina AI API calls
+2. **`extract.ts`** - Public action that provides the extraction interface
+3. **`cache.ts`** - Action cache configuration for performance optimization
 
-    // Arguments passed from the client are properties of the args object.
-    console.log(args.first, args.second);
+### Extraction Types Supported
 
-    // Write arbitrary JavaScript here: filter, aggregate, build derived data,
-    // remove non-public properties, or create new objects.
-    return documents;
-  },
-});
+| User Format  | Jina API Format | Description                   |
+| ------------ | --------------- | ----------------------------- |
+| `ai_prompt`  | `content`       | AI-powered content extraction |
+| `content`    | `content`       | Plain text content extraction |
+| `metadata`   | `json`          | Page metadata as JSON object  |
+| `screenshot` | `screenshot`    | Page screenshot generation    |
+
+## Cache Configuration
+
+- **Primary Cache**: 7-day TTL for general extraction results
+- **Fast Cache**: 2-hour TTL for frequently changing content
+- **Cache Key**: Based on URL and format parameters
+
+## Usage
+
+### From Frontend (React)
+
+```typescript
+import { useAction } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+
+const extract = useAction(api.extract.extract)
+
+const result = await extract({
+  url: 'https://example.com',
+  format: 'content',
+})
 ```
 
-Using this query function in a React component looks like:
+### From API Route
 
-```ts
-const data = useQuery(api.myFunctions.myQueryFunction, {
-  first: 10,
-  second: "hello",
-});
+```typescript
+import { ConvexHttpClient } from 'convex/browser'
+import { api } from '@/convex/_generated/api'
+
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!)
+
+const result = await convex.action(api.extract.extract, {
+  url: 'https://example.com',
+  format: 'content',
+})
 ```
 
-A mutation function looks like:
+## Response Format
 
-```ts
-// convex/myFunctions.ts
-import { mutation } from "./_generated/server";
-import { v } from "convex/values";
+All extraction calls return:
 
-export const myMutationFunction = mutation({
-  // Validators for arguments.
-  args: {
-    first: v.string(),
-    second: v.string(),
-  },
-
-  // Function implementation.
-  handler: async (ctx, args) => {
-    // Insert or modify documents in the database here.
-    // Mutations can also read from the database like queries.
-    // See https://docs.convex.dev/database/writing-data.
-    const message = { body: args.first, author: args.second };
-    const id = await ctx.db.insert("messages", message);
-
-    // Optionally, return a value from your mutation.
-    return await ctx.db.get(id);
-  },
-});
-```
-
-Using this mutation function in a React component looks like:
-
-```ts
-const mutation = useMutation(api.myFunctions.myMutationFunction);
-function handleButtonPress() {
-  // fire and forget, the most common way to use mutations
-  mutation({ first: "Hello!", second: "me" });
-  // OR
-  // use the result once the mutation has completed
-  mutation({ first: "Hello!", second: "me" }).then((result) =>
-    console.log(result),
-  );
+```typescript
+{
+  success: boolean
+  data?: string | object
+  usage?: { tokens: number }
+  processingTime: number
+  error?: string
 }
 ```
 
-Use the Convex CLI to push your functions to a deployment. See everything
-the Convex CLI can do by running `npx convex -h` in your project root
-directory. To learn more, launch the docs with `npx convex docs`.
+## Performance Features
+
+- **Caching**: Results cached for 7 days by default
+- **Timeout**: 30-second timeout for API calls
+- **Error Handling**: Comprehensive error handling with proper HTTP status codes
+- **Validation**: URL and parameter validation before processing
+
+## Environment Variables
+
+- `JINA_AI_KEY` - Required for Jina AI API access
+- `NEXT_PUBLIC_CONVEX_URL` - Convex deployment URL
+
+## Migration Benefits
+
+1. **Caching**: Automatic result caching reduces API calls and costs
+2. **Type Safety**: Full TypeScript support with Convex validators
+3. **Reliability**: Built-in retry mechanisms and error handling
+4. **Performance**: Convex's optimized action execution
+5. **Monitoring**: Better logging and observability
+6. **Scalability**: Convex handles scaling automatically
