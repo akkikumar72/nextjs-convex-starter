@@ -1,43 +1,56 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Check, Flame, Headset, Sparkles, Timer } from 'lucide-react'
+import { Check, FileText, Database, Sparkles, Image } from 'lucide-react'
 import { GradientBackground } from './gradient-background'
 import { cn } from '@/lib/utils'
 
 const capabilities = [
   {
-    title: 'AI Script Writing',
-    description: 'Feed your prompt or product page and let MagicUI draft persuasive hooks, CTAs, and localized copy in seconds.',
+    title: 'Smart AI Prompting',
+    description:
+      'Flexible template system with {{content}} placeholders for custom prompt engineering and specific use cases.',
     icon: Sparkles,
-    accent: 'from-pink-200 via-purple-200 to-indigo-200'
+    accent: 'from-blue-200 via-indigo-200 to-purple-200',
   },
   {
-    title: 'AI Avatars',
-    description: 'Spin up human presenters from a single selfie. Every language, tone, and outfit is just a slider away.',
-    icon: Flame,
-    accent: 'from-orange-200 via-rose-200 to-pink-200'
+    title: 'Intelligent Content Processing',
+    description:
+      'Remove boilerplate, navigation, and ads automatically to get readable article text and main content.',
+    icon: FileText,
+    accent: 'from-green-200 via-emerald-200 to-teal-200',
   },
   {
-    title: 'Video Editor',
-    description: 'Drag, drop, and restructure scenes with timeline precision. Auto-resize to vertical, square, or widescreen.',
-    icon: Timer,
-    accent: 'from-blue-200 via-sky-200 to-cyan-200'
+    title: 'Rich Metadata Extraction',
+    description:
+      'JSON output with comprehensive page data including titles, descriptions, headings, and OpenGraph.',
+    icon: Database,
+    accent: 'from-orange-200 via-amber-200 to-yellow-200',
   },
   {
-    title: 'Global Localization',
-    description: 'Auto-translate subtitles, voiceover, and on-screen text into 30+ languages with one-click compliance checks.',
-    icon: Headset,
-    accent: 'from-green-200 via-emerald-200 to-teal-200'
-  }
+    title: 'High-Quality Visual Capture',
+    description:
+      'Full-page screenshots with high quality, perfect for design analysis and visual AI training.',
+    icon: Image,
+    accent: 'from-pink-200 via-rose-200 to-red-200',
+  },
 ]
 
-const languages = ['English', 'Spanish', 'French', 'German', 'Portuguese', 'Arabic', 'Hindi', 'Japanese']
+const extractionFormats = [
+  'Content',
+  'Metadata',
+  'AI Prompt',
+  'Screenshot',
+  'HTML',
+  'JSON',
+  'Markdown',
+  'CSV',
+]
 
-const localizationStatuses = [
-  { locale: 'EN → ES', status: 'Approved' },
-  { locale: 'EN → FR', status: 'In review' },
-  { locale: 'EN → JP', status: 'Rendering' },
-  { locale: 'EN → PT-BR', status: 'Approved' }
+const extractionStatuses = [
+  { format: 'Content extraction', status: 'Complete' },
+  { format: 'Metadata JSON', status: 'Processing' },
+  { format: 'AI prompt ready', status: 'Queued' },
+  { format: 'Screenshot capture', status: 'Complete' },
 ]
 
 export default function Capabilities() {
@@ -50,10 +63,11 @@ export default function Capabilities() {
             Everything you need
           </Badge>
           <h2 className="mt-4 text-balance text-3xl font-semibold text-slate-900 md:text-4xl">
-            Your end-to-end production studio, automated.
+            Your all-in-one web extraction toolkit.
           </h2>
           <p className="mt-4 text-pretty text-sm text-slate-600 sm:text-base">
-            Swap tool hopping for a single MagicUI workspace crafted for high-volume creative teams.
+            Clean, structured data for your AI models and agents - with real-time testing and
+            complete API access.
           </p>
         </div>
         <div className="grid gap-6 sm:grid-cols-2">
@@ -77,38 +91,41 @@ export default function Capabilities() {
         </div>
         <div className="grid gap-6 rounded-[32px] border border-white/60 bg-white/70 p-6 text-sm text-slate-600 shadow-[0_18px_50px_rgba(71,123,255,0.12)] lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="space-y-4">
-            <h3 className="text-2xl font-semibold text-slate-900">30 languages supported out of the box</h3>
+            <h3 className="text-2xl font-semibold text-slate-900">
+              Multiple output formats for every need
+            </h3>
             <p>
-              Translate captions, voiceovers, legal text, and on-screen graphics with neural precision. Every export is packaged for the ad networks you rely on most.
+              Get clean, structured data in formats perfect for AI training, content analysis, or
+              data processing workflows.
             </p>
             <ul className="grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
-              {languages.map((language) => (
-                <li key={language} className="flex items-center gap-2">
+              {extractionFormats.map((format) => (
+                <li key={format} className="flex items-center gap-2">
                   <Check className="size-4 text-emerald-500" />
-                  {language}
+                  {format}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="rounded-3xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-500 p-[1px]">
+          <div className="rounded-3xl bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 p-[1px]">
             <div className="flex h-full flex-col gap-4 rounded-[28px] bg-white/95 p-6">
               <div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500">
-                <span>Localization board</span>
+                <span>Extraction queue</span>
                 <span>Live sync</span>
               </div>
               <div className="grid gap-3 text-sm text-slate-700">
-                {localizationStatuses.map((row) => (
+                {extractionStatuses.map((row) => (
                   <div
-                    key={row.locale}
+                    key={row.format}
                     className="flex items-center justify-between rounded-2xl bg-slate-100/80 px-4 py-3"
                   >
-                    <span className="font-medium">{row.locale}</span>
+                    <span className="font-medium">{row.format}</span>
                     <span className="text-xs text-emerald-600">{row.status}</span>
                   </div>
                 ))}
               </div>
               <Button className="mt-auto w-full rounded-full text-sm font-medium">
-                Open localization tools
+                Try format switching
               </Button>
             </div>
           </div>

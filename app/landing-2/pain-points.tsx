@@ -5,29 +5,35 @@ import { GradientBackground } from './gradient-background'
 
 const painPoints = [
   {
-    title: 'Scaling Headaches',
-    description: 'Managing thousands of variations is painful without automated workflows to build, tag, and deploy creative.'
+    title: 'Hidden Costs',
+    description:
+      "Services that don't show usage until you get billed, leaving you with surprise charges and budget overruns.",
   },
   {
-    title: 'Missed Deadlines',
-    description: 'Turnaround time balloons when script, design, and export live in different tools and handoffs.'
+    title: 'Poor User Experience',
+    description:
+      'Basic interfaces without live testing capabilities make it impossible to experiment before committing.',
   },
   {
-    title: 'Revision Chaos',
-    description: 'Feedback loops gridlock production and leave teams guessing which version is actually approved.'
+    title: 'Limited API Documentation',
+    description:
+      'Inadequate examples and integration guides make it difficult for developers to implement workflows.',
   },
   {
-    title: 'Inconsistent Quality',
-    description: 'Brand guidelines fall through the cracks when every freelancer uses a different toolkit and brief.'
+    title: 'No Real-time Feedback',
+    description:
+      "Can't see results until after processing, making it hard to iterate and optimize extraction strategies.",
   },
   {
-    title: 'Exploding Costs',
-    description: 'Hiring editors, voice actors, and translators for each campaign drains the budget before launch.'
+    title: 'Format Rigidity',
+    description:
+      'Limited options for different extraction needs, forcing you to use multiple tools for different formats.',
   },
   {
-    title: 'Platform Rejections',
-    description: 'Compliance issues and aspect ratio mistakes trigger costly re-uploads and lost performance data.'
-  }
+    title: 'Transparency Issues',
+    description:
+      'Unclear pricing and usage tracking makes it impossible to predict costs or optimize your workflow.',
+  },
 ]
 
 export default function PainPoints() {
@@ -40,15 +46,19 @@ export default function PainPoints() {
             Problem
           </Badge>
           <h2 className="text-balance text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-            Video ad creation is a nightmare.
+            Website data extraction is broken.
           </h2>
           <p className="text-pretty text-sm text-slate-600 sm:text-base">
-            Every campaign slips further behind when scriptwriting, design, voice, and compliance live in disconnected tools.
+            Every extraction workflow gets bogged down by hidden costs, poor interfaces, and lack of
+            transparency in existing tools.
           </p>
         </div>
         <div className="grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
           {painPoints.map((point) => (
-            <Card key={point.title} className="h-full border-none bg-white/80 shadow-[0_12px_35px_rgba(255,149,163,0.15)]">
+            <Card
+              key={point.title}
+              className="h-full border-none bg-white/80 shadow-[0_12px_35px_rgba(255,149,163,0.15)]"
+            >
               <CardHeader className="gap-3">
                 <span className="inline-flex size-8 items-center justify-center rounded-full bg-rose-100 text-rose-500">
                   <Flame className="size-4" />
@@ -56,7 +66,9 @@ export default function PainPoints() {
                 <CardTitle className="text-base text-slate-900">{point.title}</CardTitle>
               </CardHeader>
               <CardContent className="pb-6">
-                <CardDescription className="text-sm text-slate-600">{point.description}</CardDescription>
+                <CardDescription className="text-sm text-slate-600">
+                  {point.description}
+                </CardDescription>
               </CardContent>
             </Card>
           ))}

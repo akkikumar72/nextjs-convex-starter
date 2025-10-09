@@ -2,24 +2,14 @@
 
 import * as React from 'react'
 import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
   IconDatabase,
-  IconMessageCircle,
-  IconFileAi,
-  IconFileDescription,
   IconFileWord,
-  IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
+  IconLock,
   IconReport,
   IconSearch,
   IconSettings,
-  IconUsers,
   IconSparkles,
-  IconBrandOpenai,
 } from '@tabler/icons-react'
 
 import { NavDocuments } from '@/app/dashboard/nav-documents'
@@ -42,19 +32,14 @@ import Link from 'next/link'
 const data = {
   navMain: [
     {
-      title: 'Dashboard',
-      url: '/dashboard',
-      icon: IconDashboard,
-    },
-    {
-      title: 'Try it out',
+      title: 'Extraction Studio',
       url: '/dashboard/extract',
       icon: IconSparkles,
     },
     {
-      title: 'Payment gated',
+      title: 'Premium flows',
       url: '/dashboard/payment-gated',
-      icon: IconSparkles,
+      icon: IconLock,
     },
   ],
   navSecondary: [

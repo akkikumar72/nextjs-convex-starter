@@ -10,9 +10,9 @@ function getPageTitle(pathname: string): string {
     case '/dashboard':
       return 'Dashboard'
     case '/dashboard/extract':
-      return 'Try it out'
+      return 'Extraction Studio'
     case '/dashboard/payment-gated':
-      return 'Payment gated'
+      return 'Premium flows'
     default:
       return 'Page'
   }

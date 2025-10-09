@@ -5,11 +5,11 @@ import { GradientBackground } from './gradient-background'
 
 const testimonials = {
   headline: 'Case Study',
-  title: 'How one studio hit $100k in weekly profit with AI ads',
+  title: 'How one startup extracted 1,000+ competitor pages for AI training',
   description:
-    'Watch the exact workflow agencies use to storyboard, script, render, and launch 50+ high-performing ads every single week.',
-  name: 'Jake Hawkins',
-  role: 'Founder, Flux Creative'
+    'Watch how AI developers use our extraction platform to build competitor analysis agents and automated market intelligence systems.',
+  name: 'Sarah Chen',
+  role: 'CTO, MarketAI',
 }
 
 export default function CaseStudy() {
@@ -31,17 +31,17 @@ export default function CaseStudy() {
         <div className="relative overflow-hidden rounded-[32px] border border-white/60 bg-gradient-to-br from-black via-slate-900 to-indigo-900 p-6 text-left shadow-[0_18px_55px_rgba(32,41,86,0.45)]">
           <div className="relative overflow-hidden rounded-2xl border border-white/40 bg-black/40">
             <Image
-              src="/hero-section-main-app-dark.png"
-              alt="Case study video"
+              src="/web-extraction-hero.png"
+              alt="Web extraction case study"
               width={960}
               height={540}
               className="h-full w-full object-cover opacity-90"
             />
             <button className="absolute left-6 top-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-medium uppercase tracking-wide text-white">
-              <CirclePlay className="size-4" /> Play interview
+              <CirclePlay className="size-4" /> Watch demo
             </button>
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
-              <div className="text-sm uppercase tracking-wide text-white/70">Featured agency</div>
+              <div className="text-sm uppercase tracking-wide text-white/70">Featured customer</div>
               <p className="mt-1 text-lg font-semibold text-white">{testimonials.name}</p>
               <p className="text-sm text-white/70">{testimonials.role}</p>
             </div>
