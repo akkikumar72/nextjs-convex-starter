@@ -1,283 +1,219 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import {
+    IconAdjustmentsHorizontal,
+    IconCamera,
+    IconCode,
+    IconDatabase,
+    IconFileText,
+    IconSparkles,
+} from '@tabler/icons-react'
+import SmoothTab from '@/components/kokonutui/smooth-tab'
+
+import { BeamsBackground } from '@/components/kokonutui/beams-background'
 import { Button } from '@/components/ui/button'
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
 import {
-  IconSparkles,
-  IconFileText,
-  IconDatabase,
-  IconCamera,
-  IconCopy,
-  IconCheck,
-} from '@tabler/icons-react'
-import { toast } from 'sonner'
-import { Textarea } from '@/components/ui/textarea'
-import { useAction } from 'convex/react'
-import { api } from '@/convex/_generated/api'
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select'
 
-interface ExtractionResult {
-  success: boolean
-  data?: string | Record<string, unknown>
-  processingTime?: number
-  error?: string
+type ExtractionFormat = 'ai_prompt' | 'content' | 'metadata' | 'screenshot'
+
+interface ExtractionModeConfig {
+  id: ExtractionFormat
+  label: string
+  description: string
+  helper: string
+  placeholder: string
+  ctaLabel: string
+  codeLabel: string
+  icon: React.ReactNode
+  bullets: string[]
 }
 
+const extractionModes: ExtractionModeConfig[] = [
+    {
+        id: 'ai_prompt',
+        label: 'AI',
+        description: 'Guide the extractor with custom prompts for AI-ready insights.',
+        helper: 'Inject page content into your instructions to craft summaries, briefs, or marketing copy tailor-made for your use case.',
+        placeholder: 'Summarize the content of this website…',
+        ctaLabel: 'Run AI extraction',
+        codeLabel: 'Get AI code',
+        icon: <IconSparkles className="h-4 w-4" />,
+        bullets: [
+            'Prompt-aware rewriting with {{content}} placeholders',
+            'Great for research notes and content briefs',
+            'Caches responses for repeat requests automatically',
+        ],
+    },
+    {
+        id: 'content',
+        label: 'Content',
+        description: 'Pull the core article, keeping hierarchy and structure intact.',
+        helper: 'Perfect for knowledge bases, blog ingestion, or anywhere you need clean article output ready to ship.',
+        placeholder: 'https://example.com/product-updates',
+        ctaLabel: 'Start content fetching',
+        codeLabel: 'Get scrape code',
+        icon: <IconFileText className="h-4 w-4" />,
+        bullets: [
+            'Extracts readable markdown with headings preserved',
+            'Strips ads, navigation, and noisy UI reliably',
+            'Returns deterministic output for downstream tooling',
+        ],
+    },
+    {
+        id: 'metadata',
+        label: 'Metadata',
+        description: 'Collect SEO-ready metadata, canonical URLs, and structured details.',
+        helper: 'Ideal for monitoring competitors, powering sitemaps, or syncing landing page attributes.',
+        placeholder: 'https://example.com/docs',
+        ctaLabel: 'Fetch metadata',
+        codeLabel: 'Get metadata code',
+        icon: <IconDatabase className="h-4 w-4" />,
+        bullets: [
+            'Grabs title, description, and Open Graph signals',
+            'Surfaces canonical tags and language hints',
+            'Outputs predictable JSON for analytics pipelines',
+        ],
+    },
+    {
+        id: 'screenshot',
+        label: 'Screenshot',
+        description: 'Capture pixel-perfect renders for visual QA or sharing.',
+        helper: 'Switch between desktop and mobile profiles to preview how pages feel in different contexts.',
+        placeholder: 'https://example.com',
+        ctaLabel: 'Capture screenshot',
+        codeLabel: 'Get capture code',
+        icon: <IconCamera className="h-4 w-4" />,
+        bullets: [
+            'Full-height capture with scroll stitching',
+            'Desktop and mobile device presets available',
+            'Easy to share or archive visual regressions',
+        ],
+    },
+]
+
 export default function ExtractPage() {
-  const [url, setUrl] = useState('https://handinger.com')
-  const [prompt, setPrompt] = useState('Summarize the content of this website:\n\n{{content}}')
-  const [activeTab, setActiveTab] = useState('ai_prompt')
-  const [isLoading, setIsLoading] = useState(false)
-  const [result, setResult] = useState<ExtractionResult | null>(null)
-  const [copied, setCopied] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const extract = useAction(api.extract.extract)
+    const [activeTab, setActiveTab] = useState<ExtractionFormat>('content')
+    const [url, setUrl] = useState('https://example.com')
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+    const activeModeConfig =
+        extractionModes.find((mode) => mode.id === activeTab) ?? extractionModes[0]
 
-  // const handleClick = () => {
-  //   extract({
-  //     url,
-  //     format: activeTab as 'content' | 'markdown' | 'html' | 'json' | 'text',
-  // });
+    return (
+        <div className="relative mx-auto flex min-h-screen w-full flex-col overflow-hidden">
+            <BeamsBackground />
+            <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-12 px-4 pb-16 pt-12 sm:px-8 lg:px-12 z-10">
+                <header className="flex flex-col items-center gap-4 text-center">
+                    <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+                        Playground
+                    </h1>
+                    <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
+                        API, Docs and Playground - all in one place
+                    </p>
+                </header>
 
-  const handleExtract = async () => {
-    if (!url) {
-      toast.error('Please enter a URL')
-      return
-    }
+                <div className="space-y-4">
+                    <SmoothTab
+                        items={extractionModes.map((mode, index) => ({
+                            id: mode.id,
+                            title: mode.label,
+                            color:
+                                index === 0
+                                    ? 'bg-blue-500 hover:bg-blue-600'
+                                    : index === 1
+                                      ? 'bg-purple-500 hover:bg-purple-600'
+                                      : index === 2
+                                        ? 'bg-emerald-500 hover:bg-emerald-600'
+                                        : 'bg-amber-500 hover:bg-amber-600',
+                        }))}
+                        onChange={(id) => setActiveTab(id as ExtractionFormat)}
+                        defaultTabId={activeTab}
+                    />
 
-    setIsLoading(true)
-    setResult(null)
-
-    try {
-      const data = await extract({
-        url,
-        format: activeTab as 'ai_prompt' | 'content' | 'metadata' | 'screenshot',
-      })
-      setResult(data)
-      // const response = await fetch('/api/extract', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     url,
-      //     type: activeTab,
-      //     prompt: activeTab === 'ai_prompt' ? prompt : undefined,
-      //   }),
-      // })
-
-      // const data = await response.json()
-      // setResult(data)
-
-      if (data.success) {
-        const tokenInfo = data.usage?.tokens ? ` (${data.usage.tokens} tokens)` : ''
-        toast.success(`Extraction completed!${tokenInfo}`)
-      } else {
-        toast.error(data.error || 'Extraction failed')
-      }
-    } catch {
-      toast.error('Failed to extract content')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-      toast.success('Copied to clipboard')
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      toast.error('Failed to copy to clipboard')
-    }
-  }
-
-  const generateCurl = () =>
-    `curl -X POST ${window.location.origin}/api/extract \
-  -H 'Content-Type: application/json' \
-  -d '{"url":"${url}","type":"${activeTab}"${activeTab === 'ai_prompt' ? `,"prompt":"${prompt}"` : ''}}'`
-
-  const getTabIcon = (tab: string) => {
-    switch (tab) {
-      case 'ai_prompt':
-        return <IconSparkles className="w-4 h-4" />
-      case 'content':
-        return <IconFileText className="w-4 h-4" />
-      case 'metadata':
-        return <IconDatabase className="w-4 h-4" />
-      case 'screenshot':
-        return <IconCamera className="w-4 h-4" />
-      default:
-        return null
-    }
-  }
-  console.log({ result })
-  return (
-    <div className="container mx-auto p-6 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Try it out</h1>
-        <p className="text-muted-foreground">
-          Extract website content for AI without coding. Test our extraction capabilities.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Input Section */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Website URL</CardTitle>
-              <CardDescription>Enter the URL you want to extract content from</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="url">Website URL</Label>
-                <Input
-                  id="url"
-                  type="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com"
-                  className="mt-1"
-                />
-              </div>
-
-              {activeTab === 'ai_prompt' && (
-                <div>
-                  <Label htmlFor="prompt">AI Prompt</Label>
-                  <Textarea
-                    id="prompt"
-                    value={prompt}
-                    onChange={(e) => setPrompt(e.target.value)}
-                    placeholder="Enter your AI prompt here..."
-                    className="mt-1 min-h-[100px]"
-                  />
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Use {'{content}'} to specify where to insert the content of the page. Otherwise,
-                    we will add it at the end.
-                  </p>
+                    <div className="relative rounded-xl shadow-lg">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 rounded-xl blur-lg opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                        <Card className="relative p-6 bg-background/80 backdrop-blur-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="flex-grow">
+                                    <Input
+                                        id="url"
+                                        type="url"
+                                        value={url}
+                                        onChange={(event) => setUrl(event.target.value)}
+                                        placeholder={activeModeConfig.placeholder}
+                                        className="h-12 text-base"
+                                    />
+                                </div>
+                                <Button variant="ghost" size="icon">
+                                    <IconAdjustmentsHorizontal className="h-5 w-5" />
+                                </Button>
+                                <Select defaultValue="markdown">
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Format" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="markdown">Markdown</SelectItem>
+                                        <SelectItem value="text">Plain Text</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                                <Button variant="ghost" size="icon">
+                                    <IconCode className="h-5 w-5" />
+                                </Button>
+                                <Button className="h-12 rounded-xl bg-gradient-to-r from-orange-500 via-rose-500 to-pink-500 px-6 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl">
+                                    Start scraping
+                                </Button>
+                            </div>
+                        </Card>
+                    </div>
                 </div>
-              )}
 
-              <Button onClick={handleExtract} disabled={isLoading || !url} className="w-full">
-                {isLoading ? 'Extracting...' : 'Extract Content'}
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Output Section */}
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Extraction Types</CardTitle>
-              <CardDescription>Choose what type of content to extract</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
-                  <TabsTrigger value="ai_prompt" className="flex items-center gap-2">
-                    {getTabIcon('ai_prompt')}
-                    <span className="hidden sm:inline">AI</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="content" className="flex items-center gap-2">
-                    {getTabIcon('content')}
-                    <span className="hidden sm:inline">Content</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="metadata" className="flex items-center gap-2">
-                    {getTabIcon('metadata')}
-                    <span className="hidden sm:inline">Metadata</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="screenshot" className="flex items-center gap-2">
-                    {getTabIcon('screenshot')}
-                    <span className="hidden sm:inline">Screenshot</span>
-                  </TabsTrigger>
-                </TabsList>
-
-                <div className="mt-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Example CURL</span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(generateCurl())}
-                      disabled={!mounted}
-                    >
-                      {copied ? (
-                        <IconCheck className="w-4 h-4" />
-                      ) : (
-                        <IconCopy className="w-4 h-4" />
-                      )}
-                      Copy
-                    </Button>
-                  </div>
-                  <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded-md">
-                    <code className="text-sm break-all">
-                      {mounted ? generateCurl() : 'Loading...'}
-                    </code>
-                  </div>
+                <div className="mt-12">
+                    <h2 className="text-2xl font-semibold tracking-tight">Recent Runs</h2>
+                    <Card className="mt-4">
+                        <CardContent className="p-0">
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-border">
+                                    <thead className="bg-muted/50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Endpoint</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Status</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Started</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-border">
+                                        {/* Placeholder rows */}
+                                        <tr>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">grafana.com/about/careers</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">Success</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">Oct 10, 2025</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">daisyui.com</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">Success</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">Oct 9, 2025</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          {/* Results */}
-          {result && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Results</CardTitle>
-                <CardDescription>
-                  {result.success ? 'Extraction completed' : 'Extraction failed'}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {result.success ? (
-                  <div className="space-y-4">
-                    {activeTab !== 'screenshot' ? (
-                      <div>
-                        <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-md max-h-60 overflow-y-auto">
-                          <pre className="text-sm whitespace-pre-wrap">
-                            {typeof result.data === 'string'
-                              ? result.data
-                              : JSON.stringify(result.data, null, 2)}
-                          </pre>
-                        </div>
-                      </div>
-                    ) : (
-                      <img
-                        src={String(result.data)}
-                        alt="Website screenshot"
-                        className="max-w-full h-auto rounded-md border"
-                      />
-                    )}
-
-                    <Separator />
-
-                    {result.processingTime && (
-                      <div className="text-sm text-muted-foreground">
-                        Processing time: {result.processingTime}ms
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-red-600">
-                    <p>Error: {result.error}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
+            </div>
         </div>
-      </div>
-    </div>
-  )
+    )
 }

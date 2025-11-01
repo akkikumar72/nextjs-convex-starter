@@ -1,5 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "daisyui" {
+  themes:
+    caramellatte --default,
+    sunset --prefersdark,
+    cupcake;
+}
 
 @custom-variant dark (&:is(.dark *));
 
